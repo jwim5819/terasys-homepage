@@ -1,22 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import logo from '../assets/logo/terasys_logo.png';
 
 interface NavbarProps {
   isLight?: boolean;
+  onNavigate?: (index: number) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLight = false }) => {
+const Navbar: React.FC<NavbarProps> = ({ isLight = false, onNavigate }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const handleHomeClick = (e: React.MouseEvent, index: number) => {
+    if (location.pathname !== '/') {
+      // If not on home, navigate to home first
+      navigate('/');
+      // We might need a delay or a state-based scroll trigger in App.tsx
+      // For now, let's assume the user can click again or we handle it via useEffect in Home.tsx if needed.
+    } else {
+      e.preventDefault();
+      if (onNavigate) {
+        onNavigate(index);
+      }
+    }
+  };
+
+  const handleMouseEnter = (menu: string) => setActiveDropdown(menu);
+  const handleMouseLeave = () => setActiveDropdown(null);
+
   return (
-    <nav className={`${styles.navbar} ${isLight ? styles.light : ''}`}>
-      <a href="/" className={styles.logoLink}>
+    <nav className={`${styles.navbar} ${isLight || location.pathname !== '/' ? styles.light : ''}`}>
+      <Link to="/" className={styles.logoLink} onClick={(e) => handleHomeClick(e, 0)}>
         <img src={logo} alt="TERASYS" className={styles.logoImage} />
-      </a>
+      </Link>
       <ul className={styles.navLinks}>
-        <li><a href="#home" className={styles.navLink}>Home</a></li>
-        <li><a href="#about" className={styles.navLink}>About</a></li>
-        <li><a href="#services" className={styles.navLink}>Services</a></li>
-        <li><a href="#contact" className={styles.navLink}>Contact</a></li>
+        <li onMouseEnter={() => handleMouseEnter('home')} onMouseLeave={handleMouseLeave}>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 0)}>Home</Link>
+        </li>
+        
+        <li className={styles.hasDropdown} onMouseEnter={() => handleMouseEnter('about')} onMouseLeave={handleMouseLeave}>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 1)}>About</Link>
+          <ul className={`${styles.dropdown} ${activeDropdown === 'about' ? styles.show : ''}`}>
+            <li><Link to="/ethical-management">윤리경영</Link></li>
+            <li><Link to="/major-news">주요뉴스</Link></li>
+            <li><Link to="/community">커뮤니티</Link></li>
+          </ul>
+        </li>
+
+        <li className={styles.hasDropdown} onMouseEnter={() => handleMouseEnter('solutions')} onMouseLeave={handleMouseLeave}>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 2)}>Solutions</Link>
+          <ul className={`${styles.dropdown} ${activeDropdown === 'solutions' ? styles.show : ''}`}>
+            <li><Link to="/hitachi-vantara">HITACHI VANTARA</Link></li>
+            <li><Link to="/logpresso">Logpresso</Link></li>
+          </ul>
+        </li>
+
+        <li onMouseEnter={() => handleMouseEnter('services')} onMouseLeave={handleMouseLeave}>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 3)}>Services</Link>
+        </li>
+
+        <li className={styles.hasDropdown} onMouseEnter={() => handleMouseEnter('clients')} onMouseLeave={handleMouseLeave}>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 4)}>Clients</Link>
+          <ul className={`${styles.dropdown} ${activeDropdown === 'clients' ? styles.show : ''}`}>
+            <li><Link to="/all-clients">전체 고객사</Link></li>
+          </ul>
+        </li>
       </ul>
     </nav>
   );

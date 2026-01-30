@@ -68,46 +68,58 @@
 }
 
 .aboutContent {
-  width: 80%;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 4rem 2rem;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  color: #333;
-  text-align: center;
+  padding: 0 4rem; /* Reduced horizontal padding */
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: flex-start; /* Align content to the left */
+  gap: 4rem; /* Reduced gap between logo and text */
+  text-align: left;
+  height: 100%;
 }
 
-.aboutTitle {
-  font-size: 3rem;
+.aboutLogoContainer {
+  flex: 0 0 350px; /* Fixed width for logo to control spacing better */
+  display: flex;
+  justify-content: flex-start; /* Align logo to the left within its container */
+  align-items: center;
+}
+
+.aboutLogo {
+  width: 100%;
+  max-width: 320px; /* Slightly smaller logo */
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+}
+
+.aboutTextContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.aboutMainHeading {
+  font-size: 2rem; /* Reduced from 2.5rem for a more refined look */
   font-weight: 700;
-  margin-bottom: 2rem;
-  color: #1a1a1a;
-  position: relative;
-  display: inline-block;
+  line-height: 1.4;
+  color: #1E73BE; /* Point color applied */
+  word-break: keep-all;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-.aboutTitle::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background-color: #007bff;
-  border-radius: 2px;
-}
-
-.aboutDescription {
-  font-size: 1.2rem;
+.aboutBodyText {
+  font-size: 1.05rem; /* Slightly smaller */
   line-height: 1.8;
-  color: #555;
-  margin-bottom: 3rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  color: #555; /* Subtle grey */
+  text-align: left; /* Left align looks more modern than justify often */
+  word-break: keep-all;
+  white-space: pre-line;
+  font-weight: 400;
 }
 
 .valuesGrid {
@@ -256,15 +268,267 @@
   to { transform: rotate(360deg); }
 }
 
-.footer {
-  height: 300px; /* Custom height for footer */
+.clientsContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 제목, 컨베이어, 버튼 사이의 간격을 완벽하게 동일하게 배분 */
+  align-items: center;
+  padding: 160px 0; /* 천장과 바닥에서 정확히 140px씩 띄움 */
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.clientsHeader {
+  text-align: center;
+  margin: 0; /* 간격 간섭 제거 */
+  flex: 0 0 auto;
+}
+
+.clientsTitle {
+  color: #333;
+  font-size: 3rem; /* 크기 확대 */
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.clientsSubtitle {
+  color: #666;
+  font-size: 1rem; /* 크기 확대 */
+  line-height: 1.6;
+  margin: 20px 0 0 0;
+}
+
+.conveyorWrapper {
+  margin-top: 30px;
+  position: relative;
   width: 100%;
-  background-color: #333;
-  color: white;
-  scroll-snap-align: end; /* Snap to the bottom of the footer */
+  max-width: 100vw;
+  overflow: visible;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  flex: 0 0 auto; /* 자기가 가질 높이만 가짐 */
+}
+
+.conveyorGradientLeft,
+.conveyorGradientRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.conveyorGradientLeft {
+  left: 0;
+  background: linear-gradient(to right, white 20%, transparent);
+}
+
+.conveyorGradientRight {
+  right: 0;
+  background: linear-gradient(to left, white 20%, transparent);
+}
+
+.conveyorContainer {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.conveyorTrackLeft {
+  display: flex;
+  width: fit-content;
+  animation: scrollLeft 40s linear infinite;
+}
+
+.conveyorTrackRight {
+  display: flex;
+  width: fit-content;
+  animation: scrollRight 40s linear infinite;
+}
+
+.conveyorItem {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 140px;
+  margin: 0 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.conveyorItem img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.conveyorItem:hover img {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.seeAllClients {
+  margin-top: 50px;
+  padding: 0.8rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 3;
+  flex: 0 0 auto;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.footer {
+  height: auto;
+  min-height: 160px; /* Further reduced from 200px */
+  width: 100%;
+  background-color: #222;
+  color: #aaa;
+  scroll-snap-align: end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  padding: 1.5rem 0; /* Reduced from 2rem */
+}
+
+.footerContent {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Reduced gap from 1.5rem */
+  text-align: left;
+}
+
+.footerTopRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  border-bottom: 1px solid #333; /* Subtler border */
+  padding-bottom: 1rem; /* Reduced padding from 1.5rem */
+}
+
+.footerLeft {
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center; /* Vertically center in the row */
+  gap: 0.8rem;
+  align-self: stretch; /* Take full height to allow vertical centering */
+}
+
+.footerSlogan {
+  color: #ddd;
+  font-size: 0.95rem; /* Slightly smaller */
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.footerRight {
+  flex: 1;
+}
+
+.footerLogo {
+  width: 130px; /* Slightly smaller */
+  height: auto;
+  opacity: 0.9;
+  filter: grayscale(100%) brightness(200%);
+  object-fit: contain;
+}
+
+.footerInfoGrid {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr 1.6fr; /* Give more space to the 3rd column for Address */
+  gap: 0.8rem 1.5rem; /* Balanced horizontal gap */
+  width: 100%;
+}
+
+.footerItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem; /* Reduced gap between label and value */
+}
+
+.footerLabel {
+  font-weight: 600;
+  color: #ddd;
+  font-size: 0.85rem;
+}
+
+.footerValue {
+  color: #999;
+  font-weight: 300;
+  word-break: keep-all; /* Prevent awkward breaks in address */
+  font-size: 0.85rem; /* Slightly smaller font to fit text */
+  letter-spacing: -0.5px; /* Tighter letter spacing */
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .footerInfoGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .footerTopRow {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .footerLeft {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .footerInfoGrid {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
 }
 
 .indicator {

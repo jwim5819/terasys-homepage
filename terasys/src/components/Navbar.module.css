@@ -3,13 +3,13 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: 1rem 2rem;
+  padding: 1rem 4rem; /* Increased padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000; /* Always on top */
+  z-index: 1000;
   color: white;
-  transition: all 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 }
 
@@ -20,52 +20,154 @@
 }
 
 .logoImage {
-  height: 40px; /* Adjust height as needed */
+  height: 38px;
   width: auto;
-  filter: brightness(0) invert(1); /* Make logo white */
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
 }
 
 .navLinks {
   display: flex;
-  gap: 2rem;
+  gap: 3rem; /* Increased gap */
   list-style: none;
   margin: 0;
   padding: 0;
+  height: 100%;
+}
+
+.navLinks > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 60px; /* Base height for hover tracking */
 }
 
 .navLink {
   text-decoration: none;
   color: white;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.01em;
+}
+
+/* Dropdown Container */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95); /* 살짝 작은 상태에서 시작 */
+  transform-origin: top center;
+  background-color: rgba(255, 255, 255, 0.4); /* 더 투명하게 */
+  backdrop-filter: blur(20px) saturate(180%); /* 블러와 채도 강화 */
+  min-width: 200px;
+  list-style: none;
+  padding: 12px 0;
+  margin: 0;
+  border-radius: 2px; /* 아주 미세한 곡률만 남김 */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); /* 더 빠른 반응성 */
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 마우스 이동 시 사라짐 방지를 위한 투명 다리 */
+.dropdown::after {
+  content: '';
+  position: absolute;
+  top: -20px; /* 메인 메뉴와의 간격을 메워줌 */
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: transparent;
+}
+
+.dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  pointer-events: auto;
+}
+
+.dropdown li {
+  width: 100%;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+.dropdown li a {
+  display: block;
+  padding: 10px 16px; /* 좌우 여백 축소 (20px -> 16px) */
+  text-decoration: none;
+  color: #222;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: opacity 0.3s ease;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.01em;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  border-left: none; /* 왼쪽 줄 제거 */
 }
 
-.navLink:hover {
-  opacity: 0.7;
+.dropdown li a:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: #1E73BE;
+  padding-left: 16px; /* 왼쪽 패딩 유지 (밀림 효과 제거) */
 }
 
-/* Mobile responsive styles can be added here */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-  
-  .navLinks {
-    display: none; /* For now, hide links on mobile or implement a hamburger menu later */
-  }
+/* Navbar.light styles - 드롭다운 내부 텍스트 가독성 확보 */
+.navbar.light .dropdown {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Light Theme (for non-hero sections) */
+.navLink {
+  text-decoration: none;
+  color: white;
+  font-size: 1.05rem; /* 살짝 조정 */
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.02em;
+}
+
+.dropdown li a:hover {
+  background-color: rgba(30, 115, 190, 0.08); /* 브랜드 컬러 배경 살짝 */
+  color: #1E73BE;
+  padding-left: 20px;
+}
+
+/* 호버 시 왼쪽 바 효과 */
+.dropdown li a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  background-color: #1E73BE;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.dropdown li a:hover::before {
+  transform: scaleY(1);
+}
+
+/* Navbar.light styles */
 .navbar.light {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 
 .navbar.light .logoImage {
-  filter: none; /* Restore original colors */
+  filter: none;
 }
 
 .navbar.light .navLink {
@@ -74,5 +176,20 @@
 }
 
 .navbar.light .navLink:hover {
-  color: #007bff;
+  color: #1E73BE;
+}
+
+@media (max-width: 992px) {
+  .navbar {
+    padding: 1rem 2rem;
+  }
+  .navLinks {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
 }
