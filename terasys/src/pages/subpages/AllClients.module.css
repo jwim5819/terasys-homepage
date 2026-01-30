@@ -1,0 +1,48 @@
+.container {
+  padding: 120px 20px 80px; /* 하단 패딩 추가, 상단은 유지 */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tabWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px; /* 50px에서 30px로 축소 */
+}
+
+.content {
+  padding: 0 20px; /* 상단 패딩 제거 */
+}
+
+.section {
+  margin-bottom: 80px;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30px;
+  position: relative;
+  padding-left: 15px;
+}
+
+.sectionTitle::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background-color: #1E73BE;
+  border-radius: 2px;
+}
+
+.logoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+  align-items: center;
+}
