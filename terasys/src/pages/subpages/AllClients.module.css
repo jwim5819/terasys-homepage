@@ -8,7 +8,34 @@
   display: flex;
   justify-content: center;
   gap: 40px;
-  margin-bottom: 30px; /* 50px에서 30px로 축소 */
+  margin-bottom: 30px;
+}
+
+.tab {
+  padding: 15px 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.tab.active {
+  color: #1E73BE;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #1E73BE;
 }
 
 .content {
@@ -19,30 +46,55 @@
   margin-bottom: 80px;
 }
 
+.siemContent {
+  padding-top: 62px; /* 1.8rem(제목높이) * 1.1 + 30px(마진) ≈ 62px */
+}
+
 .sectionTitle {
   font-size: 1.8rem;
   font-weight: 700;
   color: #333;
-  margin-bottom: 30px;
+  margin: 0 0 30px 0; /* 상단 마진 제거, 하단만 30px */
+  line-height: 1.1; /* 높이 계산을 명확하게 하기 위해 설정 */
   position: relative;
   padding-left: 15px;
 }
 
-.sectionTitle::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 24px;
-  background-color: #1E73BE;
-  border-radius: 2px;
-}
-
 .logoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* 180px에서 160px로 축소 */
+  gap: 20px;
   align-items: center;
+}
+
+.logoItem {
+  background-color: #fcfcfc;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  height: 80px; /* 100px에서 80px로 축소 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px; /* 패딩도 살짝 줄임 */
+  transition: all 0.3s ease;
+}
+
+.logoItem:hover {
+  border-color: #1E73BE;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.logoItem img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%); /* 기본 흑백 */
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.logoItem:hover img {
+  filter: grayscale(0%); /* 호버 시 컬러 */
+  opacity: 1;
 }

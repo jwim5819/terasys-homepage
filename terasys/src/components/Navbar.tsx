@@ -14,13 +14,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLight = false, onNavigate }) => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const handleHomeClick = (e: React.MouseEvent, index: number) => {
+    e.preventDefault();
     if (location.pathname !== '/') {
-      // If not on home, navigate to home first
-      navigate('/');
-      // We might need a delay or a state-based scroll trigger in App.tsx
-      // For now, let's assume the user can click again or we handle it via useEffect in Home.tsx if needed.
+      // 서브페이지에서 홈으로 갈 때 state를 확실히 전달
+      navigate('/', { state: { targetSection: index } });
     } else {
-      e.preventDefault();
+      // 홈 안에서 이동할 때
       if (onNavigate) {
         onNavigate(index);
       }

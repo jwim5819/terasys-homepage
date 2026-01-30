@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import logo from '../assets/logo/terasys_logo.png';
 
@@ -29,6 +30,8 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Expose scrollToSection to parent
   useImperativeHandle(ref, () => ({
@@ -37,8 +40,29 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
     }
   }));
 
+  // Handle navigation from subpages
+  useEffect(() => {
+    if (location.state && typeof location.state.targetSection === 'number') {
+      const target = location.state.targetSection;
+      
+      // 컨테이너가 준비될 때까지 반복 확인하거나 충분한 시간을 줌
+      const scrollTimer = setTimeout(() => {
+        scrollToSection(target);
+      }, 200); // 100ms에서 200ms로 약간 늘림
+      
+      // state 초기화 (re-run 방지)
+      window.history.replaceState({}, document.title);
+      return () => clearTimeout(scrollTimer);
+    }
+  }, [location.state]); // location 전체보다 location.state 변화에 집중
+
   // Background slider logic
   useEffect(() => {
+    // 초기 마운트 시 현재 섹션에 맞는 네이비바 스타일 적용
+    if (onSectionChange) {
+        onSectionChange(currentSection > 0 ? currentSection : 0);
+    }
+
     const interval = setInterval(() => {
       setCurrentBgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
     }, 5000); // Change image every 5 seconds
@@ -215,7 +239,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
               </div>
             </div>
 
-            <button className={styles.seeAllClients}>
+            <button className={styles.seeAllClients} onClick={() => navigate('/all-clients')}>
               See All Clients →
             </button>
           </div>
