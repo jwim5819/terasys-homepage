@@ -51,17 +51,14 @@ const Navbar: React.FC<NavbarProps> = ({ isLight = false, onNavigate }) => {
         <li className={styles.hasDropdown} onMouseEnter={() => handleMouseEnter('solutions')} onMouseLeave={handleMouseLeave}>
           <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 2)}>Solutions</Link>
           <ul className={`${styles.dropdown} ${activeDropdown === 'solutions' ? styles.show : ''}`}>
+            <li><Link to="/logpresso">LOGPRESSO</Link></li>
             <li><Link to="/hitachi-vantara">HITACHI VANTARA</Link></li>
-            <li><Link to="/logpresso">Logpresso</Link></li>
+            <li><Link to="/services">Services</Link></li>
           </ul>
         </li>
 
-        <li onMouseEnter={() => handleMouseEnter('services')} onMouseLeave={handleMouseLeave}>
-          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 3)}>Services</Link>
-        </li>
-
         <li className={styles.hasDropdown} onMouseEnter={() => handleMouseEnter('clients')} onMouseLeave={handleMouseLeave}>
-          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 4)}>Clients</Link>
+          <Link to="/" className={styles.navLink} onClick={(e) => handleHomeClick(e, 3)}>Clients</Link>
           <ul className={`${styles.dropdown} ${activeDropdown === 'clients' ? styles.show : ''}`}>
             <li><Link to="/all-clients">전체 고객사</Link></li>
           </ul>

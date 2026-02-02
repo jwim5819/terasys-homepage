@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import styles from './Home.module.css';
 import logo from '../assets/logo/terasys_logo.png';
+import logpressoLogo from '../assets/logo/logpresso_logo.PNG';
+import hitachiLogo from '../assets/logo/hitachi_logo.PNG';
+import Footer from '../components/Footer';
 
 // Import background images
 import homeBg1 from '../assets/home/home-bg-1.jpg';
@@ -29,6 +32,7 @@ interface HomeProps {
 const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,29 +48,49 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
   useEffect(() => {
     if (location.state && typeof location.state.targetSection === 'number') {
       const target = location.state.targetSection;
-      
-      // 컨테이너가 준비될 때까지 반복 확인하거나 충분한 시간을 줌
       const scrollTimer = setTimeout(() => {
         scrollToSection(target);
-      }, 200); // 100ms에서 200ms로 약간 늘림
-      
-      // state 초기화 (re-run 방지)
+      }, 200);
       window.history.replaceState({}, document.title);
       return () => clearTimeout(scrollTimer);
     }
-  }, [location.state]); // location 전체보다 location.state 변화에 집중
+  }, [location.state]);
+
+  // Preload background images with fallback
+  useEffect(() => {
+    const preloadImages = async () => {
+      const promises = backgroundImages.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+
+      try {
+        await Promise.all(promises);
+        setImagesLoaded(true);
+      } catch (error) {
+        setImagesLoaded(true);
+      }
+    };
+
+    preloadImages();
+    
+    // Fallback: Force show after 1s
+    const timer = setTimeout(() => setImagesLoaded(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Background slider logic
   useEffect(() => {
-    // 초기 마운트 시 현재 섹션에 맞는 네이비바 스타일 적용
     if (onSectionChange) {
         onSectionChange(currentSection > 0 ? currentSection : 0);
     }
-
     const interval = setInterval(() => {
       setCurrentBgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
-    }, 5000); // Change image every 5 seconds
-
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -76,25 +100,22 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
       if (isScrolling) return;
 
       const direction = e.deltaY > 0 ? 1 : -1;
-      // 0: Page 1, 1: Page 2, 2: Page 3, 3: Page 4, 4: Page 5, 5: Footer
-      const nextSection = Math.min(Math.max(currentSection + direction, 0), 5);
+      // 0: Home, 1: About, 2: Solutions, 3: Clients, 4: Footer
+      const nextSection = Math.min(Math.max(currentSection + direction, 0), 4);
 
       if (nextSection !== currentSection) {
         isScrolling = true;
         setCurrentSection(nextSection);
         if (onSectionChange) {
-            onSectionChange(nextSection > 0 ? nextSection : 0); // Trigger navbar change
+            onSectionChange(nextSection > 0 ? nextSection : 0);
         }
-        
         scrollToSection(nextSection);
-
         setTimeout(() => {
           isScrolling = false;
-        }, 800); // Wait for animation to finish
+        }, 800);
       }
     };
 
@@ -111,8 +132,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
   const scrollToSection = (index: number) => {
     if (containerRef.current) {
         let top = 0;
-        if (index === 5) {
-            // Footer case: Scroll to bottom
+        if (index === 4) {
             top = containerRef.current.scrollHeight - window.innerHeight;
         } else {
             top = index * window.innerHeight;
@@ -122,7 +142,6 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
         top: top,
         behavior: 'smooth',
       });
-      // Update state if called externally (e.g. from nav dots)
       setCurrentSection(index);
       if (onSectionChange) onSectionChange(index > 0 ? index : 0);
     }
@@ -130,7 +149,6 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
 
   const { topRowLogos, bottomRowLogos } = useMemo(() => {
     const half = Math.ceil(allClientLogos.length / 2);
-    // Double the arrays for a seamless infinite loop
     return {
       topRowLogos: [...allClientLogos.slice(0, half), ...allClientLogos.slice(0, half)],
       bottomRowLogos: [...allClientLogos.slice(half), ...allClientLogos.slice(half)],
@@ -142,7 +160,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
       <div className={styles.container} ref={containerRef}>
         {/* Page 1: Home */}
         <section className={styles.section} id="home">
-          <div className={styles.bgContainer}>
+          <div className={`${styles.bgContainer} ${imagesLoaded ? styles.loaded : ''}`}>
             {backgroundImages.map((bg, index) => (
               <div
                 key={index}
@@ -151,9 +169,8 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
               />
             ))}
           </div>
-          <div className={styles.content}>
+          <div className={`${styles.content} ${imagesLoaded ? styles.show : ''}`}>
             <div className={styles.visualCircle}></div>
-            
             <div className={styles.textContentWrapper}>
               <h1 className={styles.mainTitle}>TERASYS</h1>
               <div className={styles.heroText}>
@@ -191,20 +208,35 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
         </section>
 
         {/* Page 3: Solutions */}
-        <section className={styles.section} style={{ backgroundColor: '#f9f9f9' }} id="solutions">
-          <div className={styles.aboutContent}>
-            <h1 style={{ color: '#333', fontSize: '3rem' }}>Solutions</h1>
+        <section className={styles.section} style={{ backgroundColor: '#ffffff' }} id="solutions">
+          <div className={styles.solutionsContent}>
+            <div className={styles.clientsHeader}>
+              <h1 className={styles.clientsTitle}>SOLUTIONS</h1>
+              <p className={styles.clientsSubtitle}>
+                테라시스는 검증된 글로벌 솔루션과 앞선 기술력으로 최적의 비즈니스 인프라를 구축합니다.
+              </p>
+            </div>
+            <div className={styles.solutionsGrid}>
+              <Link to="/logpresso" className={styles.solutionCard}>
+                <div className={styles.solutionLogoWrapper}>
+                  <img src={logpressoLogo} alt="LOGPRESSO" className={styles.solutionLogo} />
+                </div>
+                <p>보안 오케스트레이션 및 자동화 솔루션</p>
+                <div className={styles.solutionMore}>Learn More →</div>
+              </Link>
+
+              <Link to="/hitachi-vantara" className={styles.solutionCard}>
+                <div className={styles.solutionLogoWrapper}>
+                  <img src={hitachiLogo} alt="HITACHI VANTARA" className={styles.solutionLogo} />
+                </div>
+                <p>엔터프라이즈급 스토리지 솔루션</p>
+                <div className={styles.solutionMore}>Learn More →</div>
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Page 4: Services */}
-        <section className={styles.section} style={{ backgroundColor: '#f0f2f5' }} id="services">
-          <div className={styles.aboutContent}>
-            <h1 style={{ color: '#333', fontSize: '3rem' }}>Business Area</h1>
-          </div>
-        </section>
-
-        {/* Page 5: Clients */}
+        {/* Page 4: Clients */}
         <section className={styles.section} style={{ backgroundColor: '#ffffff' }} id="clients">
           <div className={styles.clientsContent}>
             <div className={styles.clientsHeader}>
@@ -245,53 +277,12 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
           </div>
         </section>
 
-        {/* Footer (Index 4) */}
-        <footer className={styles.footer}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerTopRow}>
-              <div className={styles.footerLeft}>
-                <img src={logo} alt="TERASYS" className={styles.footerLogo} />
-                <p className={styles.footerSlogan}>진화하는 미래, 진화하는 기업</p>
-              </div>
-              
-              <div className={styles.footerRight}>
-                <div className={styles.footerInfoGrid}>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>회사명</span>
-                    <span className={styles.footerValue}>(주)테라시스</span>
-                  </div>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>대표이사</span>
-                    <span className={styles.footerValue}>김경민</span>
-                  </div>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>설립일</span>
-                    <span className={styles.footerValue}>2010년 05월 13일</span>
-                  </div>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>대표전화</span>
-                    <span className={styles.footerValue}>02-517-4706</span>
-                  </div>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>팩스</span>
-                    <span className={styles.footerValue}>0303-0945-4706</span>
-                  </div>
-                  <div className={styles.footerItem}>
-                    <span className={styles.footerLabel}>소재지</span>
-                    <span className={styles.footerValue}>서울특별시 영등포구 의사당대로1길 34(인영빌딩 301호)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <p className={styles.copyright}>&copy; 2010-2026 TERASYS Co., Ltd. All rights reserved.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
 
       {/* Right Side Indicator */}
       <div className={styles.indicator}>
-        {[0, 1, 2, 3, 4].map((index) => (
+        {[0, 1, 2, 3].map((index) => (
           <button
             key={index}
             className={`${styles.dot} ${currentSection === index ? styles.active : ''}`}

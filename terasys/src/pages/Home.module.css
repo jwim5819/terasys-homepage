@@ -7,8 +7,7 @@
 
 .container {
   height: 100vh;
-  overflow: hidden; /* Disable native scroll */
-  
+  overflow: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -20,7 +19,6 @@
 .section {
   height: 100vh;
   width: 100%;
-  /* Removed scroll-snap properties */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +32,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Behind content */
+  z-index: 0;
+  background-color: #0a0e14;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.bgContainer.loaded {
+  opacity: 1;
 }
 
 .bgImage {
@@ -56,40 +61,47 @@
 .content {
   text-align: left;
   position: relative;
-  z-index: 1; /* Above background */
-  color: white; /* Assuming dark backgrounds, make text white */
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.5); /* Improved readability with deeper shadow */
+  z-index: 1;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column; /* Stack circle and text if relative, but we will absolutely position circle */
+  flex-direction: column;
   justify-content: center;
-  height: 100%; /* Take full height to allow vertical centering */
+  height: 100%;
   width: 100%;
-  padding-left: 10%; /* Move to the left with some breathing room */
+  padding-left: 10%;
+  opacity: 0;
+  transition: opacity 1s ease-out 0.3s;
 }
 
+.content.show {
+  opacity: 1;
+}
+
+/* About Section */
 .aboutContent {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 4rem; /* Reduced horizontal padding */
+  padding: 0 4rem;
   display: flex;
-  align-items: center; /* Center vertically */
-  justify-content: flex-start; /* Align content to the left */
-  gap: 4rem; /* Reduced gap between logo and text */
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4rem;
   text-align: left;
   height: 100%;
 }
 
 .aboutLogoContainer {
-  flex: 0 0 350px; /* Fixed width for logo to control spacing better */
+  flex: 0 0 350px;
   display: flex;
-  justify-content: flex-start; /* Align logo to the left within its container */
+  justify-content: flex-start;
   align-items: center;
 }
 
 .aboutLogo {
   width: 100%;
-  max-width: 320px; /* Slightly smaller logo */
+  max-width: 320px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
@@ -103,57 +115,254 @@
 }
 
 .aboutMainHeading {
-  font-size: 2rem; /* Reduced from 2.5rem for a more refined look */
+  font-size: 2rem;
   font-weight: 700;
   line-height: 1.4;
-  color: #1E73BE; /* Point color applied */
+  color: #1E73BE;
   word-break: keep-all;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
 .aboutBodyText {
-  font-size: 1.05rem; /* Slightly smaller */
+  font-size: 1.05rem;
   line-height: 1.8;
-  color: #555; /* Subtle grey */
-  text-align: left; /* Left align looks more modern than justify often */
+  color: #555;
+  text-align: left;
   word-break: keep-all;
   white-space: pre-line;
   font-weight: 400;
 }
 
-.valuesGrid {
+/* Solutions Section */
+.solutionsContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 160px 0; /* Match clientsContent padding */
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+}
+
+.solutionsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 50px auto 0; /* Added 50px top margin to move down */
 }
 
-.valueCard {
-  padding: 2rem;
+.solutionCard {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease;
+  padding: 2.5rem 2rem; /* Reduced from 3.5rem 2.5rem for compact look */
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid #eee;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.valueCard:hover {
-  transform: translateY(-5px);
+.solutionCard:hover {
+  transform: translateY(-8px); /* Reduced from -12px */
+  box-shadow: 0 20px 50px rgba(30, 115, 190, 0.15);
+  border-color: #1E73BE;
 }
 
-.valueTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #007bff;
+.solutionLogoWrapper {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
-.valueText {
+.solutionLogo {
+  max-width: 100%; /* 크기를 조금 더 키웠습니다 */
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.solutionCard:hover .solutionLogo {
+  transform: scale(1.05); /* 호버 시 로고만 살짝 확대하여 강조 */
+}
+
+.solutionCard h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1E73BE;
+  margin-bottom: 1.5rem;
+}
+
+.solutionCard p {
   font-size: 1rem;
   color: #666;
-  line-height: 1.6;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  word-break: keep-all;
 }
 
+.solutionMore {
+  margin-top: auto;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.solutionCard:hover .solutionMore {
+  color: #1E73BE;
+}
+
+/* Clients Section */
+.clientsContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 160px 0;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.clientsHeader {
+  text-align: center;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.clientsTitle {
+  color: #333;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.clientsSubtitle {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 20px 0 0 0;
+}
+
+.conveyorWrapper {
+  margin-top: 30px;
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  overflow: visible;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+.conveyorGradientLeft,
+.conveyorGradientRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.conveyorGradientLeft {
+  left: 0;
+  background: linear-gradient(to right, white 20%, transparent);
+}
+
+.conveyorGradientRight {
+  right: 0;
+  background: linear-gradient(to left, white 20%, transparent);
+}
+
+.conveyorContainer {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.conveyorTrackLeft {
+  display: flex;
+  width: fit-content;
+  animation: scrollLeft 40s linear infinite;
+}
+
+.conveyorTrackRight {
+  display: flex;
+  width: fit-content;
+  animation: scrollRight 40s linear infinite;
+}
+
+.conveyorItem {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 140px;
+  margin: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.conveyorItem img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.conveyorItem:hover img {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.seeAllClients {
+  margin-top: 50px;
+  padding: 0.8rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 3;
+  flex: 0 0 auto;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Visual & Hero */
 .visualCircle {
   width: 400px;
   height: 400px;
@@ -161,16 +370,16 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(15px);
   animation: float 6s ease-in-out infinite;
-  position: absolute; /* Absolute positioning relative to content/section */
-  left: 10%; /* Adjust horizontal position of circle independently */
-  top: 30%; /* Center vertically or adjust as needed */
-  transform: translateY(-50%); /* Center vertically */
-  z-index: 0; /* Behind text */
+  position: absolute;
+  left: 10%;
+  top: 30%;
+  transform: translateY(-50%);
+  z-index: 0;
 }
 
 .textContentWrapper {
   position: relative;
-  z-index: 1; /* Above circle */
+  z-index: 1;
   display: flex;
   flex-direction: column;
   left: 1%;
@@ -268,269 +477,7 @@
   to { transform: rotate(360deg); }
 }
 
-.clientsContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 제목, 컨베이어, 버튼 사이의 간격을 완벽하게 동일하게 배분 */
-  align-items: center;
-  padding: 160px 0; /* 천장과 바닥에서 정확히 140px씩 띄움 */
-  max-width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.clientsHeader {
-  text-align: center;
-  margin: 0; /* 간격 간섭 제거 */
-  flex: 0 0 auto;
-}
-
-.clientsTitle {
-  color: #333;
-  font-size: 3rem; /* 크기 확대 */
-  font-weight: 800;
-  margin: 0;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.clientsSubtitle {
-  color: #666;
-  font-size: 1rem; /* 크기 확대 */
-  line-height: 1.6;
-  margin: 20px 0 0 0;
-}
-
-.conveyorWrapper {
-  margin-top: 30px;
-  position: relative;
-  width: 100%;
-  max-width: 100vw;
-  overflow: visible;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
-  flex: 0 0 auto; /* 자기가 가질 높이만 가짐 */
-}
-
-.conveyorGradientLeft,
-.conveyorGradientRight {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 250px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.conveyorGradientLeft {
-  left: 0;
-  background: linear-gradient(to right, white 20%, transparent);
-}
-
-.conveyorGradientRight {
-  right: 0;
-  background: linear-gradient(to left, white 20%, transparent);
-}
-
-.conveyorContainer {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-  padding: 10px 0;
-}
-
-.conveyorTrackLeft {
-  display: flex;
-  width: fit-content;
-  animation: scrollLeft 40s linear infinite;
-}
-
-.conveyorTrackRight {
-  display: flex;
-  width: fit-content;
-  animation: scrollRight 40s linear infinite;
-}
-
-.conveyorItem {
-  flex: 0 0 auto;
-  width: 320px;
-  height: 140px;
-  margin: 0 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.conveyorItem img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  opacity: 0.9;
-  transition: all 0.3s ease;
-}
-
-.conveyorItem:hover img {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.seeAllClients {
-  margin-top: 50px;
-  padding: 0.8rem 2.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #555;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 3;
-  flex: 0 0 auto;
-}
-
-@keyframes scrollLeft {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes scrollRight {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-.footer {
-  height: auto;
-  min-height: 160px; /* Further reduced from 200px */
-  width: 100%;
-  background-color: #222;
-  color: #aaa;
-  scroll-snap-align: end;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  padding: 1.5rem 0; /* Reduced from 2rem */
-}
-
-.footerContent {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem; /* Reduced gap from 1.5rem */
-  text-align: left;
-}
-
-.footerTopRow {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 2rem;
-  border-bottom: 1px solid #333; /* Subtler border */
-  padding-bottom: 1rem; /* Reduced padding from 1.5rem */
-}
-
-.footerLeft {
-  flex: 0 0 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center; /* Vertically center in the row */
-  gap: 0.8rem;
-  align-self: stretch; /* Take full height to allow vertical centering */
-}
-
-.footerSlogan {
-  color: #ddd;
-  font-size: 0.95rem; /* Slightly smaller */
-  font-weight: 500;
-  margin: 0;
-  opacity: 0.8;
-}
-
-.footerRight {
-  flex: 1;
-}
-
-.footerLogo {
-  width: 130px; /* Slightly smaller */
-  height: auto;
-  opacity: 0.9;
-  filter: grayscale(100%) brightness(200%);
-  object-fit: contain;
-}
-
-.footerInfoGrid {
-  display: grid;
-  grid-template-columns: 0.8fr 0.8fr 1.6fr; /* Give more space to the 3rd column for Address */
-  gap: 0.8rem 1.5rem; /* Balanced horizontal gap */
-  width: 100%;
-}
-
-.footerItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem; /* Reduced gap between label and value */
-}
-
-.footerLabel {
-  font-weight: 600;
-  color: #ddd;
-  font-size: 0.85rem;
-}
-
-.footerValue {
-  color: #999;
-  font-weight: 300;
-  word-break: keep-all; /* Prevent awkward breaks in address */
-  font-size: 0.85rem; /* Slightly smaller font to fit text */
-  letter-spacing: -0.5px; /* Tighter letter spacing */
-}
-
-.copyright {
-  font-size: 0.8rem;
-  color: #666;
-  text-align: center;
-  margin-top: 0;
-}
-
-@media (max-width: 900px) {
-  .footerInfoGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
-  }
-}
-
-@media (max-width: 768px) {
-  .footerTopRow {
-    flex-direction: column;
-    gap: 2rem;
-  }
-  .footerLeft {
-    width: 100%;
-    align-items: center;
-    text-align: center;
-  }
-  .footerInfoGrid {
-    grid-template-columns: 1fr; /* 1 column on mobile */
-  }
-}
-
+/* Indicator */
 .indicator {
   position: fixed;
   top: 50%;
@@ -546,7 +493,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: rgba(150, 150, 150, 0.6); /* Semi-transparent gray */
+  background-color: rgba(150, 150, 150, 0.6);
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;

@@ -1,0 +1,110 @@
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+.aboutContent {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 6rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4rem;
+  text-align: left;
+}
+
+.aboutLogoContainer {
+  flex: 0 0 350px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.aboutLogo {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+}
+
+.aboutTextContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.aboutMainHeading {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1E73BE;
+  word-break: keep-all;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.aboutBodyText {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #555;
+  text-align: left;
+  word-break: keep-all;
+  white-space: pre-line;
+  font-weight: 400;
+}
+
+.subPageNav {
+  width: 100%;
+  max-width: 1200px;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.navCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.navCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  border-color: #1E73BE;
+}
+
+.navTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.navDesc {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.navArrow {
+  margin-top: auto;
+  color: #1E73BE;
+  font-weight: 600;
+}
