@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import logo from '../assets/logo/terasys_logo.png';
-import logpressoLogo from '../assets/logo/logpresso_logo.PNG';
-import hitachiLogo from '../assets/logo/hitachi_logo.PNG';
 import Footer from '../components/Footer';
+
+// Section Components
+import AboutSection from '../components/sections/AboutSection';
+import SolutionsSection from '../components/sections/SolutionsSection';
+import ClientsSection from '../components/sections/ClientsSection';
 
 // Import background images
 import homeBg1 from '../assets/home/home-bg-1.jpg';
@@ -12,14 +14,6 @@ import homeBg2 from '../assets/home/home-bg-2.jpg';
 import homeBg3 from '../assets/home/home-bg-3.jpg';
 
 const backgroundImages = [homeBg1, homeBg2, homeBg3];
-
-// Dynamically load client logos (only from siem_soar)
-const clientLogoModules = import.meta.glob('../assets/clients/siem_soar/*.{png,jpg,jpeg,PNG,JPG,JPEG,svg}', {
-  eager: true,
-  query: '?url',
-  import: 'default',
-});
-const allClientLogos = Object.values(clientLogoModules) as string[];
 
 export interface HomeHandle {
   scrollToSection: (index: number) => void;
@@ -37,14 +31,14 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Expose scrollToSection to parent
+  // Expose scrollToSection
   useImperativeHandle(ref, () => ({
     scrollToSection: (index: number) => {
       scrollToSection(index);
     }
   }));
 
-  // Handle navigation from subpages
+  // Handle navigation from state
   useEffect(() => {
     if (location.state && typeof location.state.targetSection === 'number') {
       const target = location.state.targetSection;
@@ -56,7 +50,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
     }
   }, [location.state]);
 
-  // Preload background images with fallback
+  // Preload images
   useEffect(() => {
     const preloadImages = async () => {
       const promises = backgroundImages.map((src) => {
@@ -67,7 +61,6 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
           img.onerror = resolve;
         });
       });
-
       try {
         await Promise.all(promises);
         setImagesLoaded(true);
@@ -75,15 +68,12 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
         setImagesLoaded(true);
       }
     };
-
     preloadImages();
-    
-    // Fallback: Force show after 1s
     const timer = setTimeout(() => setImagesLoaded(true), 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Background slider logic
+  // Background slider
   useEffect(() => {
     if (onSectionChange) {
         onSectionChange(currentSection > 0 ? currentSection : 0);
@@ -94,6 +84,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Scroll handling
   useEffect(() => {
     const container = containerRef.current;
     let isScrolling = false;
@@ -103,7 +94,6 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
       if (isScrolling) return;
 
       const direction = e.deltaY > 0 ? 1 : -1;
-      // 0: Home, 1: About, 2: Solutions, 3: Clients, 4: Footer
       const nextSection = Math.min(Math.max(currentSection + direction, 0), 4);
 
       if (nextSection !== currentSection) {
@@ -123,9 +113,7 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
       container.addEventListener('wheel', handleWheel, { passive: false });
     }
     return () => {
-      if (container) {
-        container.removeEventListener('wheel', handleWheel);
-      }
+      if (container) container.removeEventListener('wheel', handleWheel);
     };
   }, [currentSection, onSectionChange]);
 
@@ -147,18 +135,10 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
     }
   };
 
-  const { topRowLogos, bottomRowLogos } = useMemo(() => {
-    const half = Math.ceil(allClientLogos.length / 2);
-    return {
-      topRowLogos: [...allClientLogos.slice(0, half), ...allClientLogos.slice(0, half)],
-      bottomRowLogos: [...allClientLogos.slice(half), ...allClientLogos.slice(half)],
-    };
-  }, []);
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} ref={containerRef}>
-        {/* Page 1: Home */}
+        {/* Page 1: Home Hero */}
         <section className={styles.section} id="home">
           <div className={`${styles.bgContainer} ${imagesLoaded ? styles.loaded : ''}`}>
             {backgroundImages.map((bg, index) => (
@@ -187,100 +167,17 @@ const Home = forwardRef<HomeHandle, HomeProps>(({ onSectionChange }, ref) => {
         </section>
 
         {/* Page 2: About Us */}
-        <section className={styles.section} style={{ backgroundColor: '#ffffff' }} id="about">
-          <div className={styles.aboutContent}>
-            <div className={styles.aboutLogoContainer}>
-              <img src={logo} alt="TERASYS Logo" className={styles.aboutLogo} />
-            </div>
-            <div className={styles.aboutTextContainer}>
-              <h2 className={styles.aboutMainHeading}>
-                최고의 기술과 풍부한 경험으로<br />
-                차세대 보안운영의 표준을 제시합니다.
-              </h2>
-              <div className={styles.aboutBodyText}>
-                안녕하십니까, 보안 솔루션 전문 기업 테라시스입니다.<br /><br />
-                오늘날의 보안 환경은 온프레미스에서 클라우드까지 그 경계가 무너지고 있으며, 관리해야 할 보안 데이터는 기하급수적으로 늘어나고 있습니다. 기존의 통합로그분석이나 보안관제 시스템은 파편화된 위협 대응과 성능의 한계로 인해 갈수록 고도화되는 사이버 공격을 방어하는 데 어려움을 겪고 있습니다.<br /><br />
-                테라시스는 이러한 한계를 극복하고자 보안운영 플랫폼 전문 기업인 로그프레소(Logpresso) 의 강력한 기술력에 금융, 제조, 통신, 공공 등 다양한 산업군에서 쌓아온 당사의 차세대 보안운영 (에이전틱 AI SIEM) 구축 노하우를 결합하였습니다.<br /><br />
-                단순한 솔루션 공급을 넘어, 데이터 수집부터 위협 탐지, 침해 분석 및 대응(SOAR), 그리고 시각화에 이르기까지 모든 과정을 하나의 플랫폼으로 통합하여 완전한 가시성을 제공합니다. 테라시스는 AI와 위협 인텔리전스가 결합된 디지털 포렌식 수준의 자동 분석 체계를 구축하여, 고객사가 가장 안전한 디지털 환경에서 비즈니스에 전념할 수 있도록 최상의 동반자가 되겠습니다.
-              </div>
-            </div>
-          </div>
-        </section>
+        <AboutSection />
 
         {/* Page 3: Solutions */}
-        <section className={styles.section} style={{ backgroundColor: '#ffffff' }} id="solutions">
-          <div className={styles.solutionsContent}>
-            <div className={styles.clientsHeader}>
-              <h1 className={styles.clientsTitle}>SOLUTIONS</h1>
-              <p className={styles.clientsSubtitle}>
-                테라시스는 검증된 글로벌 솔루션과 앞선 기술력으로 최적의 비즈니스 인프라를 구축합니다.
-              </p>
-            </div>
-            <div className={styles.solutionsGrid}>
-              <Link to="/logpresso" className={styles.solutionCard}>
-                <div className={styles.solutionLogoWrapper}>
-                  <img src={logpressoLogo} alt="LOGPRESSO" className={styles.solutionLogo} />
-                </div>
-                <p>보안 오케스트레이션 및 자동화 솔루션</p>
-                <div className={styles.solutionMore}>Learn More →</div>
-              </Link>
-
-              <Link to="/hitachi-vantara" className={styles.solutionCard}>
-                <div className={styles.solutionLogoWrapper}>
-                  <img src={hitachiLogo} alt="HITACHI VANTARA" className={styles.solutionLogo} />
-                </div>
-                <p>엔터프라이즈급 스토리지 솔루션</p>
-                <div className={styles.solutionMore}>Learn More →</div>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <SolutionsSection />
 
         {/* Page 4: Clients */}
-        <section className={styles.section} style={{ backgroundColor: '#ffffff' }} id="clients">
-          <div className={styles.clientsContent}>
-            <div className={styles.clientsHeader}>
-              <h1 className={styles.clientsTitle}>CLIENTS</h1>
-              <p className={styles.clientsSubtitle}>
-                테라시스는 다양한 산업 분야의 고객과 함께 안정적인 보안·운영 환경을 만들어가고 있습니다.
-              </p>
-            </div>
-
-            <div className={styles.conveyorWrapper}>
-              <div className={styles.conveyorGradientLeft}></div>
-              <div className={styles.conveyorGradientRight}></div>
-              
-              <div className={styles.conveyorContainer}>
-                <div className={styles.conveyorTrackLeft}>
-                  {topRowLogos.map((logo, index) => (
-                    <div key={`top-${index}`} className={styles.conveyorItem}>
-                      <img src={logo} alt={`Client logo top ${index}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.conveyorContainer}>
-                <div className={styles.conveyorTrackRight}>
-                  {bottomRowLogos.map((logo, index) => (
-                    <div key={`bottom-${index}`} className={styles.conveyorItem}>
-                      <img src={logo} alt={`Client logo bottom ${index}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <button className={styles.seeAllClients} onClick={() => navigate('/all-clients')}>
-              See All Clients →
-            </button>
-          </div>
-        </section>
+        <ClientsSection />
 
         <Footer />
       </div>
 
-      {/* Right Side Indicator */}
       <div className={styles.indicator}>
         {[0, 1, 2, 3].map((index) => (
           <button
